@@ -1,0 +1,34 @@
+stages:
+  prepare_data:
+    cmd: python src/data/prepare_data.py
+    deps:
+      - src/data/prepare_data.py
+      - data/raw/leftover_flights_2000.csv
+    outs:
+      - data/processed/X_train.csv
+      - data/processed/X_test.csv
+      - data/processed/y_train.csv
+      - data/processed/y_test.csv
+
+  train_model:
+    cmd: python src/train_model.py
+    deps:
+      - src/train_model.py
+      - data/processed/X_train.csv
+      - data/processed/y_train.csv
+    outs:
+      - models/xgboost_model.pkl
+    params:
+      - model.xgboost.max_depth
+      - model.xgboost.n_estimators
+      - model.xgboost.learning_rate
+
+  evaluate:
+    cmd: python src/evaluate.py
+    deps:
+      - src/evaluate.py
+      - models/xgboost_model.pkl
+      - data/processed/X_test.csv
+      - data/processed/y_test.csv
+    metrics:
+      - metrics.json

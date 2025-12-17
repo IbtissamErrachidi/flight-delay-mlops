@@ -1,0 +1,20 @@
+data:
+  raw_dir: data/raw
+  processed_dir: data/processed
+  leftover_file: leftover_flights_2000.csv
+
+split:
+  test_size: 0.2
+  random_state: 42
+
+model:
+  xgboost:
+    max_depth: 6
+    n_estimators: 100
+    learning_rate: 0.1
+
+features:
+  cat_cols:
+    - airline
+    - origin_airport
+    - dest_airport

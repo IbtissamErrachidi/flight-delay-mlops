@@ -1,0 +1,23 @@
+# Environnement virtuel
+uv/
+
+# Données (gérées par DVC)
+data/
+data/**
+
+# Modèles entraînés
+models/
+models/**
+
+# DVC
+.dvc/cache/
+.dvc/tmp/
+
+# Python
+__pycache__/
+*.pyc
+
+# IDE / OS
+.vscode/
+.DS_Store
+Thumbs.db
