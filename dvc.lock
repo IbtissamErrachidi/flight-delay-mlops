@@ -1,0 +1,30 @@
+schema: '2.0'
+stages:
+  prepare_data:
+    cmd: python -m src.data.prepare_data
+    deps:
+    - path: data/raw/leftover_flights_2000.csv
+      hash: md5
+      md5: d3f5c862af6fe7385ce11ab2b5d1529c
+      size: 195772
+    - path: src/data/prepare_data.py
+      hash: md5
+      md5: 043c639ca23a2d8ca865eb19d83f8938
+      size: 601
+    outs:
+    - path: data/processed/X_test.csv
+      hash: md5
+      md5: 5a7a873ac74cf8d1e00dda56797de578
+      size: 37739
+    - path: data/processed/X_train.csv
+      hash: md5
+      md5: 5d807c3e1cf78c44602480b1b3860a26
+      size: 149756
+    - path: data/processed/y_test.csv
+      hash: md5
+      md5: 6af16dcb32d6521e5a794fa740e9b025
+      size: 2537
+    - path: data/processed/y_train.csv
+      hash: md5
+      md5: 615f71c43544590e0b8158b45f83af3c
+      size: 9989
