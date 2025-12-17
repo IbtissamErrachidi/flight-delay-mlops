@@ -11,24 +11,37 @@ stages:
       - data/processed/y_test.csv
 
   train_model:
-    cmd: python -m src.model.train
+    cmd: python -m src.models.train
     deps:
-      - src/model/train.py
+      - src/models/train.py
       - data/processed/X_train.csv
       - data/processed/y_train.csv
     outs:
       - models/xgboost_model.pkl
+      - models/encoder.pkl
     params:
       - model.xgboost.max_depth
       - model.xgboost.n_estimators
       - model.xgboost.learning_rate
 
   evaluate:
-    cmd: python src/evaluate.py
+    cmd: python -m src.models.evaluate
     deps:
-      - src/evaluate.py
-      - models/xgboost_model.pkl
+      - src/models/evaluate.py
+      - models/xgboost_model_v2.pkl
       - data/processed/X_test.csv
       - data/processed/y_test.csv
     metrics:
-      - metrics.json
+      - evaluation/metrics.json
+    plots:
+      - evaluation/scatter_plot.png:
+          template: scatter
+          x: "true"
+          y: "pred"
+          x_label: "True value"
+          y_label: "Predicted value"
+          title: "True vs Predicted"
+      - evaluation/predictions.csv:
+          template: simple
+      - evaluation/confusion_matrix.png:
+          template: confusion_matrix

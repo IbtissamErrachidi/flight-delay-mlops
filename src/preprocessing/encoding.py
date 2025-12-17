@@ -1,4 +1,5 @@
 from sklearn.preprocessing import OrdinalEncoder
+import joblib
 
 def encode_categorical(X_train, X_test, cat_cols):
     encoder = OrdinalEncoder(
@@ -8,5 +9,6 @@ def encode_categorical(X_train, X_test, cat_cols):
 
     X_train[cat_cols] = encoder.fit_transform(X_train[cat_cols])
     X_test[cat_cols] = encoder.transform(X_test[cat_cols])
+    joblib.dump(encoder, "models/encoder.pkl")
 
     return X_train, X_test, encoder
