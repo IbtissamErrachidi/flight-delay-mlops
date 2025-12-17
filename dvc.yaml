@@ -1,6 +1,6 @@
 stages:
   prepare_data:
-    cmd: python src/data/prepare_data.py
+    cmd: python -m src.data.prepare_data
     deps:
       - src/data/prepare_data.py
       - data/raw/leftover_flights_2000.csv
@@ -11,9 +11,9 @@ stages:
       - data/processed/y_test.csv
 
   train_model:
-    cmd: python src/train_model.py
+    cmd: python -m src.model.train
     deps:
-      - src/train_model.py
+      - src/model/train.py
       - data/processed/X_train.csv
       - data/processed/y_train.csv
     outs:
