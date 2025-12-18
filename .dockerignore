@@ -7,3 +7,5 @@ __pycache__/
 *.pyc
 uv/
 .git
+
+catboost_info/
