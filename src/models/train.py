@@ -30,11 +30,10 @@ def train_all_models(X_train, y_train):
         ("RandomForest", RandomForestRegressor(random_state=42))
     ]
 
-    # Dictionnaire pour stocker les résultats
     results = []
 
     # -------------------------
-    # Cross-validation et sauvegarde locale
+    # Cross-validation
     # -------------------------
     for name, model in models:
         kf = KFold(n_splits=5, shuffle=True, random_state=42)
@@ -61,45 +60,47 @@ def train_all_models(X_train, y_train):
 
         print(f"{name} CV MAE: {cv_mae}, CV RMSE: {cv_rmse}, CV R²: {cv_r2}")
 
-        # Sauvegarde locale
-        if name == "LightGBM":
-            model.booster_.save_model(f"models/{name.lower()}_model.txt")
-        elif name == "CatBoost":
-            model.save_model(f"models/{name.lower()}_model.cbm")
-        else:
-            joblib.dump(model, f"models/{name.lower()}_model.pkl")
-
-        # Stockage pour MLflow
         results.append((name, model, cv_mae, cv_rmse, cv_r2))
 
     # -------------------------
-    # Logging MLflow
+    # Trouver le meilleur modèle (par CV R² ici)
     # -------------------------
-# -------------------------
-# Logging MLflow
-# -------------------------
-    mlflow.set_experiment("flight-delay-multi-model")
-    for name, model, cv_mae, cv_rmse, cv_r2 in results:
-        # Si c'est XGBoost, ajouter _estimator_type pour sklearn
-        if "XGBoost" in name:
-            model._estimator_type = "regressor"  # <-- ajouter cette ligne
+    best_model = max(results, key=lambda x: x[4])  # x[4] = cv_r2
+    model_name, model_obj, mae, rmse, r2 = best_model
+    print(f"Le meilleur modèle est {model_name} avec CV R²: {r2}")
 
-        with mlflow.start_run(run_name=name):
-            mlflow.log_param("model_name", name)
-            if hasattr(model, "n_estimators"):
-                mlflow.log_param("n_estimators", model.n_estimators)
-            if hasattr(model, "max_depth"):
-                mlflow.log_param("max_depth", model.max_depth)
+    # -------------------------
+    # Sauvegarde locale du meilleur modèle seulement
+    # -------------------------
+    if model_name == "LightGBM":
+        model_obj.booster_.save_model("models/best_model.txt")
+    elif model_name == "CatBoost":
+        model_obj.save_model("models/best_model.cbm")
+    else:  # XGBoost et RandomForest
+        joblib.dump(model_obj, "models/best_model.pkl")
 
-            mlflow.log_metric("cv_mae", cv_mae)
-            mlflow.log_metric("cv_rmse", cv_rmse)
-            mlflow.log_metric("cv_r2", cv_r2)
+    # -------------------------
+    # Logging MLflow pour le meilleur modèle
+    # -------------------------
+    mlflow.set_experiment("flight-delay-best-model")
+    if "XGBoost" in model_name:
+        model_obj._estimator_type = "regressor"
 
-            # Tous les modèles sont maintenant loggés avec sklearn
-            mlflow.sklearn.log_model(model, artifact_path="model")
+    with mlflow.start_run(run_name=model_name):
+        mlflow.log_param("model_name", model_name)
+        if hasattr(model_obj, "n_estimators"):
+            mlflow.log_param("n_estimators", model_obj.n_estimators)
+        if hasattr(model_obj, "max_depth"):
+            mlflow.log_param("max_depth", model_obj.max_depth)
 
+        mlflow.log_metric("cv_mae", mae)
+        mlflow.log_metric("cv_rmse", rmse)
+        mlflow.log_metric("cv_r2", r2)
 
-    return results
+        mlflow.sklearn.log_model(model_obj, artifact_path="model")
+
+    return best_model
+
 
 
 

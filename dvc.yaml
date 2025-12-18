@@ -18,7 +18,7 @@ stages:
       - data/processed/X_train.csv
       - data/processed/y_train.csv
     outs:
-      - models/xgboost_model_v2.pkl
+      - models/best_model.pkl
     params:
       - model.xgboost.max_depth
       - model.xgboost.n_estimators
@@ -28,7 +28,6 @@ stages:
     cmd: python -m src.models.evaluate
     deps:
       - src/models/evaluate.py
-      - models/xgboost_model_v2.pkl
       - data/processed/X_test.csv
       - data/processed/y_test.csv
     metrics:
