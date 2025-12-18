@@ -9,6 +9,7 @@ stages:
       - data/processed/X_test.csv
       - data/processed/y_train.csv
       - data/processed/y_test.csv
+      - models/encoder.pkl
 
   train_model:
     cmd: python -m src.models.train
@@ -17,8 +18,7 @@ stages:
       - data/processed/X_train.csv
       - data/processed/y_train.csv
     outs:
-      - models/xgboost_model.pkl
-      - models/encoder.pkl
+      - models/xgboost_model_v2.pkl
     params:
       - model.xgboost.max_depth
       - model.xgboost.n_estimators
