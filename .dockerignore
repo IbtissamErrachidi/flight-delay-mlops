@@ -1,0 +1,9 @@
+data/
+models/
+.dvc/cache
+.dvc/tmp
+mlruns/
+__pycache__/
+*.pyc
+uv/
+.git
