@@ -3,10 +3,10 @@ stages:
   prepare_data:
     cmd: python -m src.data.prepare_data
     deps:
-    - path: data/raw/leftover_flights_2000.csv
+    - path: data/raw/df_final.csv
       hash: md5
-      md5: d3f5c862af6fe7385ce11ab2b5d1529c
-      size: 195772
+      md5: 6d641230621a41045a8f99a036f71010
+      size: 98254458
     - path: src/data/prepare_data.py
       hash: md5
       md5: 51843e1be45db6078052eaa0e719f378
