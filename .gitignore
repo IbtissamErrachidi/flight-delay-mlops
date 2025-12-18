@@ -2,12 +2,10 @@
 uv/
 
 # Données (gérées par DVC)
-data/
-data/**
+/data/
 
 # Modèles entraînés
-models/
-models/**
+/models/
 
 # DVC
 .dvc/cache/
@@ -24,4 +22,8 @@ Thumbs.db
 
 # MLflow
 mlruns/
+
+
+catboost_info/
+
 
