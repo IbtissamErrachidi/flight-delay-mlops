@@ -9,8 +9,8 @@ stages:
       size: 98254458
     - path: src/data/prepare_data.py
       hash: md5
-      md5: 51843e1be45db6078052eaa0e719f378
-      size: 1663
+      md5: 8c36a4eb55d896938a456f53a26ebb3a
+      size: 1654
     outs:
     - path: data/processed/X_test.csv
       hash: md5
@@ -45,13 +45,13 @@ stages:
       size: 9785
     - path: src/models/train.py
       hash: md5
-      md5: 3d6019ddf68255f3c8a134cd86dcd2c2
-      size: 4307
+      md5: 9994f7b9d1398fa3735d9da3dc3d3930
+      size: 4935
     params:
       params.yaml:
-        model.xgboost.learning_rate: 0.1
-        model.xgboost.max_depth: 6
-        model.xgboost.n_estimators: 100
+        model.xgboost.learning_rate: 0.05
+        model.xgboost.max_depth: 8
+        model.xgboost.n_estimators: 700
     outs:
     - path: models/best_model.pkl
       hash: md5

@@ -10,24 +10,42 @@ from catboost import CatBoostRegressor
 import mlflow
 import mlflow.sklearn
 from src.models.utils import add_fold_features_arr
+import yaml
 
 def train_all_models(X_train, y_train):
-    # -------------------------
+    # Charger les paramètres
+    with open("params.yaml", "r") as f:
+        params = yaml.safe_load(f)["model"]
+
     # Définition des modèles
-    # -------------------------
     models = [
         ("XGBoost", XGBRegressor(
-            n_estimators=700, learning_rate=0.05, max_depth=8,
-            random_state=42, tree_method='hist', eval_metric='mae'
+            n_estimators=params["xgboost"]["n_estimators"],
+            max_depth=params["xgboost"]["max_depth"],
+            learning_rate=params["xgboost"]["learning_rate"],
+            random_state=42,
+            tree_method='hist',
+            eval_metric='mae'
         )),
         ("LightGBM", lgb.LGBMRegressor(
-            n_estimators=700, learning_rate=0.05, max_depth=8, random_state=42
+            n_estimators=params["lightgbm"]["n_estimators"],
+            max_depth=params["lightgbm"]["max_depth"],
+            learning_rate=params["lightgbm"]["learning_rate"],
+            random_state=42
         )),
         ("CatBoost", CatBoostRegressor(
-            depth=8, learning_rate=0.05, iterations=700,
-            loss_function='MAE', random_seed=42, verbose=0
+            iterations=params["catboost"]["iterations"],
+            depth=params["catboost"]["depth"],
+            learning_rate=params["catboost"]["learning_rate"],
+            loss_function='MAE',
+            random_seed=42,
+            verbose=0
         )),
-        ("RandomForest", RandomForestRegressor(random_state=42))
+        ("RandomForest", RandomForestRegressor(
+            n_estimators=params["random_forest"]["n_estimators"],
+            max_depth=params["random_forest"]["max_depth"],
+            random_state=42
+        ))
     ]
 
     results = []

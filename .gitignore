@@ -11,9 +11,13 @@ uv/
 .dvc/cache/
 .dvc/tmp/
 
-# Python
-__pycache__/
+# Ignorer tous les fichiers pyc
 *.pyc
+__pycache__/
+
+# Ignorer les dossiers __pycache__ partout
+**/__pycache__/
+
 
 # IDE / OS
 .vscode/

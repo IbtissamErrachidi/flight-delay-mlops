@@ -6,7 +6,7 @@ from src.features.historical_features import add_historical_features
 from src.preprocessing.encoding import encode_categorical
 from src.preprocessing.outliers import filter_outliers
 import joblib
-import os
+
 
 
 # 1) Lire les données
