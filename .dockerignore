@@ -1,5 +1,6 @@
-data/
-models/
+data/*
+!data/processed/X_train.csv
+!data/processed/y_train.csv
 .dvc/cache
 .dvc/tmp
 mlruns/
