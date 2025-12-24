@@ -31,3 +31,11 @@ mlruns/
 catboost_info/
 
 
+# Airflow
+airflow/.env
+airflow/config/
+airflow/logs/
+airflow/plugins/
+
+
+
