@@ -1,0 +1,32 @@
+# ML
+numpy
+pandas
+scikit-learn
+scipy
+joblib
+xgboost
+lightgbm
+catboost
+
+# DVC
+dvc
+dvc-data
+dvc-http
+dvc-objects
+dvc-task
+scmrepo
+fsspec
+pygit2
+GitPython
+
+# MLflow
+mlflow-skinny
+
+# Utils
+requests
+PyYAML
+cloudpickle
+diskcache
+tqdm
+protobuf
+pyarrow
