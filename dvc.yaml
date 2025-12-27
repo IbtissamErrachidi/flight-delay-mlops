@@ -3,7 +3,7 @@ stages:
     cmd: python -m src.data.prepare_data
     deps:
       - src/data/prepare_data.py
-      - data/raw/df_final.csv
+      - data/raw/leftover_flights_2000.csv
     outs:
       - data/processed/X_train.csv
       - data/processed/X_test.csv
