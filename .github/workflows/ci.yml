@@ -46,9 +46,16 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements_ci.txt
+          pip install "dvc[gdrive]"
 
       - name: Run DVC pipeline
+        env:
+          GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
         run: |
+          # 1. On récupère les données depuis Google Drive
+          dvc pull
+          
+          # 2. On lance les étapes du projet
           dvc repro  # relance la pipeline DVC
           dvc metrics show  # affiche les métriques générées
           dvc plots show  # affiche les plots générés
