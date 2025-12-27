@@ -29,7 +29,7 @@ jobs:
         run: |
           python -m compileall src/
 
-  lint:
+  run-dvc-pipeline:
     runs-on: ubuntu-latest
     needs: build-test
 
@@ -42,79 +42,83 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Install linting tools
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install flake8
+          pip install -r requirements_ci.txt
+          pip install "dvc[gdrive]"
 
-      - name: Run linting
+      - name: Download raw/processed data and models from Google Drive
         run: |
-          flake8 src/
+          pip install gdown
+          mkdir -p data/processed models
+          # Data processed
+          gdown https://drive.google.com/uc?id=1YyGn9DM3tzxkuy-s6ERBgaJC7_sRuXXl -O data/processed/X_train.csv
+          gdown https://drive.google.com/uc?id=1c3RFJxCUdMMZ-QTbdST9MB8eimdYXRsQ -O data/processed/X_test.csv
+          gdown https://drive.google.com/uc?id=14JkhBai7zhODwSNHPjACDIrYmru1OMgN -O data/processed/y_train.csv
+          gdown https://drive.google.com/uc?id=1EuLdKO8PSdSn_7zSl88h1KDKKU9g454i -O data/processed/y_test.csv
+          # Models
+          gdown https://drive.google.com/uc?id=<best_model_ID> -O models/best_model.pkl
+          gdown https://drive.google.com/uc?id=<encoder_ID> -O models/encoder.pkl
+
+      - name: Run DVC pipeline
+        run: |
+          dvc repro
+          dvc status
+
+  test-api:
+    runs-on: ubuntu-latest
+    needs: run-dvc-pipeline
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install API dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements_api.txt
+          pip install uvicorn fastapi gdown
+
+      - name: Download model and data from Google Drive
+        run: |
+          mkdir -p models data/processed
+          gdown https://drive.google.com/uc?id=1Yh_MbLCtDj73bwso38HY3mLkGaDi9Kcd -O models/best_model.pkl
+          gdown https://drive.google.com/uc?id=1kqo7i75sqVcTJuqyz_B3UveiHR_6x4KR -O models/encoder.pkl
+          gdown https://drive.google.com/uc?id=1YyGn9DM3tzxkuy-s6ERBgaJC7_sRuXXl -O data/processed/X_train.csv
+          gdown https://drive.google.com/uc?id=14JkhBai7zhODwSNHPjACDIrYmru1OMgN -O data/processed/y_train.csv
+
+      - name: Check API starts
+        run: |
+          uvicorn api.main:app --port 8000 --reload --host 127.0.0.1 --lifespan off &
+          sleep 5
+          ps aux | grep uvicorn
+          curl -f http://localhost:8000/
 
 
-  # test-api:
-  #   runs-on: ubuntu-latest
-  #   needs: build-test  
-
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v4
-
-  #     - name: Set up Python
-  #       uses: actions/setup-python@v5
-  #       with:
-  #         python-version: "3.13"
-
-  #     - name: Install API dependencies
-  #       run: |
-  #         python -m pip install --upgrade pip
-  #         pip install -r requirements_api.txt
-  #         pip install uvicorn fastapi gdown
-
-  #     - name: Download model from Google Drive
-  #       run: |
-  #         mkdir -p models
-  #         gdown https://drive.google.com/uc?id=1Yh_MbLCtDj73bwso38HY3mLkGaDi9Kcd -O models/best_model.pkl
-  #         gdown https://drive.google.com/uc?id=1kqo7i75sqVcTJuqyz_B3UveiHR_6x4KR -O models/encoder.pkl
-
-  #     - name: Check API starts
-  #       run: |
-  #         uvicorn api.main:app --port 8000 --reload --host 127.0.0.1 --lifespan off &
-  #         sleep 5  # laisse le serveur démarrer
-  #         ps aux | grep uvicorn  # vérifie qu'il tourne
-  #         curl -f http://localhost:8000/  # vérifie le endpoint principal
-
-
-
-  # run-dvc-pipeline:
+  # lint:
   #   runs-on: ubuntu-latest
   #   needs: build-test
 
   #   steps:
   #     - name: Checkout code
   #       uses: actions/checkout@v4
+
   #     - name: Set up Python
   #       uses: actions/setup-python@v5
   #       with:
   #         python-version: "3.13"
-  #     - name: Install dependencies
+
+  #     - name: Install linting tools
   #       run: |
   #         python -m pip install --upgrade pip
-  #         pip install -r requirements_ci.txt
-  #         pip install "dvc[gdrive]"
-  #     - name: Download raw/processed data and models from Google Drive
+  #         pip install flake8
+
+  #     - name: Run linting
   #       run: |
-  #         pip install gdown
-  #         mkdir -p data/processed models
-  #         # Data processed
-  #         gdown https://drive.google.com/uc?id=<X_train_ID> -O data/processed/X_train.csv
-  #         gdown https://drive.google.com/uc?id=<X_test_ID> -O data/processed/X_test.csv
-  #         gdown https://drive.google.com/uc?id=<y_train_ID> -O data/processed/y_train.csv
-  #         gdown https://drive.google.com/uc?id=<y_test_ID> -O data/processed/y_test.csv
-  #         # Models
-  #         gdown https://drive.google.com/uc?id=<best_model_ID> -O models/best_model.pkl
-  #         gdown https://drive.google.com/uc?id=<encoder_ID> -O models/encoder.pkl
-  #     - name: Run DVC pipeline
-  #       run: |
-  #         dvc repro
-  #         dvc status
+  #         flake8 src/
