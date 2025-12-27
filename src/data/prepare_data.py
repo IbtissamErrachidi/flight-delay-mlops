@@ -10,7 +10,7 @@ import joblib
 
 
 # 1) Lire les données
-df = pd.read_csv("data/raw/df_final.csv")
+df = pd.read_csv("data/raw/leftover_flights_2000.csv")
 # 2) Construire X et y
 X, y = build_dataset(df)
 
