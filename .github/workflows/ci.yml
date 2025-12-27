@@ -52,6 +52,7 @@ jobs:
         run: |
           mkdir -p models
           gdown https://drive.google.com/uc?id=1Yh_MbLCtDj73bwso38HY3mLkGaDi9Kcd -O models/best_model.pkl
+          gdown https://drive.google.com/uc?id=1kqo7i75sqVcTJuqyz_B3UveiHR_6x4KR -O models/encoder.pkl
 
       - name: Check API starts
         run: |
