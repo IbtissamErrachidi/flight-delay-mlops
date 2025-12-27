@@ -51,7 +51,7 @@ jobs:
       - name: Download raw/processed data and models from Google Drive
         run: |
           pip install gdown
-          mkdir -p data/processed models
+          mkdir -p data/raw data/processed models
           # Raw data
           gdown https://drive.google.com/uc?id=1MJbgOzreJtWKpkK1UMMMgFtk29_5YMg9 -O data/raw/df_final.csv
           # Data processed
