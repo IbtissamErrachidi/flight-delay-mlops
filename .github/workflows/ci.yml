@@ -31,31 +31,37 @@ jobs:
 
 
 
-  test-api:
-    runs-on: ubuntu-latest
-    needs: build-test  
+test-api:
+  runs-on: ubuntu-latest
+  needs: build-test  
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.13"
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.13"
 
-      - name: Install API dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements_api.txt
+    - name: Install API dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements_api.txt
+        pip install uvicorn fastapi gdown
 
-      - name: Check API starts
-        run: |
-          pip install uvicorn fastapi
-          uvicorn api.main:app --port 8000 --reload --host 127.0.0.1 --lifespan off &
-          sleep 5  # laisse le serveur démarrer
-          ps aux | grep uvicorn  # vérifie qu'il tourne
-          curl -f http://localhost:8000/health  # vérifie le endpoint de santé
+    - name: Download model from Google Drive
+      run: |
+        mkdir -p models
+        gdown https://drive.google.com/uc?id=1Yh_MbLCtDj73bwso38HY3mLkGaDi9Kcd -O models/best_model.pkl
+
+    - name: Check API starts
+      run: |
+        uvicorn api.main:app --port 8000 --reload --host 127.0.0.1 --lifespan off &
+        sleep 5  # laisse le serveur démarrer
+        ps aux | grep uvicorn  # vérifie qu'il tourne
+        curl -f http://localhost:8000/  # vérifie le endpoint principal
+
 
 
 
