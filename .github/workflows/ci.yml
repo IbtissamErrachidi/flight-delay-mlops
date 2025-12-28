@@ -86,7 +86,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements_api.txt
           pip install uvicorn fastapi gdown
-          
+
+      - name: Download model and data from Google Drive
+        run: |
+          mkdir -p models data/processed
+          gdown https://drive.google.com/uc?id=1Yh_MbLCtDj73bwso38HY3mLkGaDi9Kcd -O models/best_model.pkl
+          gdown https://drive.google.com/uc?id=1kqo7i75sqVcTJuqyz_B3UveiHR_6x4KR -O models/encoder.pkl
+          gdown https://drive.google.com/uc?id=1YyGn9DM3tzxkuy-s6ERBgaJC7_sRuXXl -O data/processed/X_train.csv
+          gdown https://drive.google.com/uc?id=14JkhBai7zhODwSNHPjACDIrYmru1OMgN -O data/processed/y_train.csv
+
       - name: Check API starts
         run: |
           uvicorn api.main:app --port 8000 --reload --host 127.0.0.1 --lifespan off &
