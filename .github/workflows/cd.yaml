@@ -29,13 +29,13 @@ jobs:
 
       # Upload artifacts
       - name: Upload API Docker image
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: api-docker-image
           path: flight-delay-api.tar
 
       - name: Upload Airflow Docker image
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: airflow-docker-image
           path: flight-delay-airflow.tar
@@ -49,12 +49,12 @@ jobs:
 
       # Download artifacts
       - name: Download API Docker image
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: api-docker-image
 
       - name: Download Airflow Docker image
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: airflow-docker-image
 
