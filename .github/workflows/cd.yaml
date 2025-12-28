@@ -12,6 +12,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Download raw/processed data from Google Drive
+        run: |
+          pip install gdown
+          mkdir -p data/raw data/processed models
+          # Data processed
+          gdown https://drive.google.com/uc?id=1YyGn9DM3tzxkuy-s6ERBgaJC7_sRuXXl -O data/processed/X_train.csv
+          gdown https://drive.google.com/uc?id=14JkhBai7zhODwSNHPjACDIrYmru1OMgN -O data/processed/y_train.csv
+
       # Build Docker image API
       - name: Build Docker image for API
         run: docker build -t flight-delay-api:latest -f Dockerfile .
