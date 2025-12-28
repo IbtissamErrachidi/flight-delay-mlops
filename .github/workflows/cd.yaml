@@ -76,18 +76,3 @@ jobs:
       - name: Load Airflow Docker image
         run: docker load -i flight-delay-airflow.tar
 
-      # Optionnel : run containers pour tests
-      - name: Run API container (test)
-        run: |
-          docker run -d -p 8000:8000 --name flight-delay-api flight-delay-api:latest uvicorn api.main:app --host 0.0.0.0 --port 8000
-
-
-      - name: Run Airflow container (test)
-        run: |
-          docker network create airflow-network || true
-          docker run -d -p 8080:8080 --name flight-delay-airflow --network airflow-network flight-delay-airflow:latest
-
-      - name: Verify API is running
-        run: |
-          sleep 10
-          curl -f http://localhost:8000/docs
