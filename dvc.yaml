@@ -30,6 +30,7 @@ stages:
       - src/models/evaluate.py
       - data/processed/X_test.csv
       - data/processed/y_test.csv
+      - models/best_model.pkl
     metrics:
       - evaluation/metrics.json
     plots:
@@ -44,3 +45,14 @@ stages:
           template: simple
       - evaluation/confusion_matrix.png:
           template: confusion_matrix
+
+  evaluate_evidently:
+    cmd: python -m src.models.evaluate_evidently
+    deps:
+      - src/models/evaluate_evidently.py
+      - data/processed/X_test.csv
+      - data/processed/y_test.csv
+      - models/best_model.pkl
+    outs:
+      - reports/evidently_regression_report.json:
+          cache: false

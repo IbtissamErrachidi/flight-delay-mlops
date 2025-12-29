@@ -3,8 +3,7 @@ import pandas as pd
 from evidently import Report
 from evidently.presets import RegressionPreset
 from evidently.future.datasets import Dataset, DataDefinition, Regression
-
-from evaluate import load_best_model 
+from src.models.evaluate import load_best_model
 
 REPORT_DIR = "reports"
 os.makedirs(REPORT_DIR, exist_ok=True)
