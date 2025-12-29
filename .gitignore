@@ -37,5 +37,10 @@ airflow/config/
 airflow/logs/
 airflow/plugins/
 
+# Rapports Evidently (artifacts générés)
+reports/
+*.html
+*.json
+
 
 
