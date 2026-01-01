@@ -7,6 +7,7 @@ import joblib
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score, confusion_matrix
 import lightgbm as lgb
 from catboost import CatBoostRegressor
+from src.models.utils import add_fold_features_arr
 
 def load_best_model():
     # Chemins possibles selon le type de modèle
@@ -29,14 +30,25 @@ def load_best_model():
     raise FileNotFoundError("Aucun modèle best_model trouvé !")
 
 def evaluate_model(model, X_test, y_test, output_dir="evaluation"):
-
-    # Prédictions
+    #  AJOUTER LES FEATURES HISTORIQUES À X_TEST
+    # Charger X_train et y_train
+    X_train = pd.read_csv("data/processed/X_train.csv")
+    y_train = pd.read_csv("data/processed/y_train.csv").squeeze()
+    
+    # Ajouter les features historiques
+    _, X_test_with_hist = add_fold_features_arr(X_train, y_train.to_frame(), X_test)
+    
+    # Charger les noms de features attendus par le modèle
+    feature_names = joblib.load("models/feature_names.pkl")
+    X_test_with_hist = X_test_with_hist[feature_names]
+    
+    #  Prédictions avec les features historiques
     if isinstance(model, lgb.Booster):
-        preds = model.predict(X_test)
+        preds = model.predict(X_test_with_hist)
     elif isinstance(model, CatBoostRegressor):
-        preds = model.predict(X_test)
+        preds = model.predict(X_test_with_hist)
     else:
-        preds = model.predict(X_test)
+        preds = model.predict(X_test_with_hist)
 
     # Calcul métriques
     metrics = {
@@ -88,4 +100,4 @@ if __name__ == "__main__":
     model = load_best_model()
 
     preds, metrics = evaluate_model(model, X_test, y_test)
-    print("Evaluation terminée. Metrics:", metrics)
+    print(" Evaluation terminée. Metrics:", metrics)
