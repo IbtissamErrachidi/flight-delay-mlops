@@ -22,7 +22,7 @@ def build_dataset(df):
     }
 
     df = df.rename(columns=rename_dict)
-    df['dep_delay'] = df['dep_delay'].fillna(0)
+    df = df.dropna(subset=['dep_delay'])
 
     y = df.pop('arr_delay')
     X = df

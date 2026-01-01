@@ -2,7 +2,6 @@ import pandas as pd
 from src.data.build_dataset import build_dataset
 from sklearn.model_selection import train_test_split
 from src.features.datetime_features import add_datetime_features
-from src.features.historical_features import add_historical_features
 from src.preprocessing.encoding import encode_categorical
 from src.preprocessing.outliers import filter_outliers
 import joblib
@@ -10,7 +9,7 @@ import joblib
 
 
 # 1) Lire les données
-df = pd.read_csv("data/raw/leftover_flights_2000.csv")
+df = pd.read_csv("data/raw/df_final.csv")
 # 2) Construire X et y
 X, y = build_dataset(df)
 
@@ -25,18 +24,16 @@ X_train, X_test, y_train, y_test = train_test_split(
 # 5) Filtrer outliers (optionnel)
 X_train, y_train, X_test, y_test = filter_outliers(X_train, y_train, X_test, y_test)
 
-# 6) Ajouter features historiques
-X_train = add_historical_features(X_train, y_train, X_train)
-X_test  = add_historical_features(X_train, y_train, X_test)
 
-# 7) Encoder colonnes catégorielles
+
+# 6) Encoder colonnes catégorielles
 cat_cols = ['airline', 'origin_airport', 'dest_airport']
 X_train, X_test, encoder = encode_categorical(X_train, X_test, cat_cols)
 
 # Sauvegarder l'encodeur pour l'utiliser dans evaluate.py
 joblib.dump(encoder, "models/encoder.pkl")
 
-# 8) Sauvegarder datasets traités
+# 7) Sauvegarder datasets traités
 X_train.to_csv("data/processed/X_train.csv", index=False)
 X_test.to_csv("data/processed/X_test.csv", index=False)
 y_train.to_csv("data/processed/y_train.csv", index=False)
