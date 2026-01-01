@@ -62,6 +62,8 @@ jobs:
           # Models
           gdown https://drive.google.com/uc?id=1Yh_MbLCtDj73bwso38HY3mLkGaDi9Kcd -O models/best_model.pkl
           gdown https://drive.google.com/uc?id=1kqo7i75sqVcTJuqyz_B3UveiHR_6x4KR -O models/encoder.pkl
+          gdown https://drive.google.com/uc?id=11bF9sjlWISsR1fNQLCAjbGaKt36OPGJA -O models/feature_names.pkl
+
 
       - name: Run DVC pipeline
         run: |
@@ -92,6 +94,7 @@ jobs:
           mkdir -p models data/processed
           gdown https://drive.google.com/uc?id=1Yh_MbLCtDj73bwso38HY3mLkGaDi9Kcd -O models/best_model.pkl
           gdown https://drive.google.com/uc?id=1kqo7i75sqVcTJuqyz_B3UveiHR_6x4KR -O models/encoder.pkl
+          gdown https://drive.google.com/uc?id=11bF9sjlWISsR1fNQLCAjbGaKt36OPGJA -O models/feature_names.pkl
           gdown https://drive.google.com/uc?id=1YyGn9DM3tzxkuy-s6ERBgaJC7_sRuXXl -O data/processed/X_train.csv
           gdown https://drive.google.com/uc?id=14JkhBai7zhODwSNHPjACDIrYmru1OMgN -O data/processed/y_train.csv
 
