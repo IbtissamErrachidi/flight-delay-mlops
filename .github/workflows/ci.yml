@@ -52,17 +52,33 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements_ci.txt
 
-      - name: Download raw data
+      # Créer tous les dossiers d'abord
+      - name: Create directories
+        run: |
+          mkdir -p data/raw
+          mkdir -p data/processed
+          mkdir -p models
+          echo "Directories created:"
+          ls -la
+
+      # Télécharger les données
+      - name: Download raw data and encoder
         run: |
           pip install gdown
-          mkdir -p data/raw
-          gdown https://drive.google.com/uc?id=1kqo7i75sqVcTJuqyz_B3UveiHR_6x4KR -O models/encoder.pkl
+          echo "Downloading raw data..."
           gdown https://drive.google.com/uc?id=1MJbgOzreJtWKpkK1UMMMgFtk29_5YMg9 -O data/raw/df_final.csv
+          echo "Raw data downloaded!"
+          ls -la data/raw/
 
+      # Tester la préparation des données
       - name: Test data preparation
         run: |
           python -m src.data.prepare_data
-          ls data/processed/  
+          echo "Data preparation completed!"
+          echo "Processed data:"
+          ls -la data/processed/
+          echo "Models created:"
+          ls -la models/
 
   test-api:
     runs-on: ubuntu-latest
@@ -83,25 +99,58 @@ jobs:
           pip install -r requirements_api.txt
           pip install uvicorn fastapi gdown
 
+      # Créer les dossiers d'abord
+      - name: Create directories
+        run: |
+          mkdir -p models
+          mkdir -p data/processed
+          echo "Directories created!"
+
+      # Télécharger les modèles et données
       - name: Download pre-trained models and data
         run: |
-          mkdir -p models data/processed
+          pip install gdown
+          
+          echo "Downloading models..."
           gdown https://drive.google.com/uc?id=1Yh_MbLCtDj73bwso38HY3mLkGaDi9Kcd -O models/best_model.pkl
           gdown https://drive.google.com/uc?id=1kqo7i75sqVcTJuqyz_B3UveiHR_6x4KR -O models/encoder.pkl
           gdown https://drive.google.com/uc?id=11bF9sjlWISsR1fNQLCAjbGaKt36OPGJA -O models/feature_names.pkl
+          
+          echo "Downloading processed data..."
           gdown https://drive.google.com/uc?id=1YyGn9DM3tzxkuy-s6ERBgaJC7_sRuXXl -O data/processed/X_train.csv
           gdown https://drive.google.com/uc?id=14JkhBai7zhODwSNHPjACDIrYmru1OMgN -O data/processed/y_train.csv
+          
+          echo "All files downloaded!"
+          echo "Models:"
+          ls -la models/
+          echo "Processed data:"
+          ls -la data/processed/
 
+      # Tester le démarrage de l'API
       - name: Test API startup
         run: |
           uvicorn api.main:app --host 127.0.0.1 --port 8000 &
-          sleep 5
-          curl -f http://localhost:8000/
+          sleep 10
+          curl -f http://127.0.0.1:8000/
 
-
+      # Tester une prédiction API
       - name: Test API prediction
         run: |
-          curl -X POST http://127.0.0.1:8000/predict -H "Content-Type: application/json" -d "{\"flight_date\": \"2025-12-19\", \"airline\": 19, \"flight_number\": 3202, \"origin_airport\": 305, \"dest_airport\": 56, \"scheduled_dep_time\": 1420.0, \"dep_delay\": 5.0, \"taxi_out\": 18.0, \"wheels_off\": 1432.0, \"scheduled_arr_time\": 1600.0, \"scheduled_elapsed_time\": 100.0, \"distance\": 450.0, \"year\": 2025, \"month\": 12}"
+          curl -X POST http://127.0.0.1:8000/predict \
+            -H "Content-Type: application/json" \
+            -d '{
+              "airline": "AA",
+              "origin_airport": "ATL",
+              "dest_airport": "LAX",
+              "month": 6,
+              "day": 15,
+              "day_of_week": 3,
+              "dep_hour": 14,
+              "arr_hour": 17,
+              "distance": 1946,
+              "scheduled_dep_time": "2023-06-15T14:30:00",
+              "scheduled_arr_time": "2023-06-15T17:45:00"
+            }'
 
 
   # lint:
