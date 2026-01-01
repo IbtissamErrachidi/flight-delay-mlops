@@ -56,12 +56,13 @@ jobs:
         run: |
           pip install gdown
           mkdir -p data/raw
+          gdown https://drive.google.com/uc?id=1kqo7i75sqVcTJuqyz_B3UveiHR_6x4KR -O models/encoder.pkl
           gdown https://drive.google.com/uc?id=1MJbgOzreJtWKpkK1UMMMgFtk29_5YMg9 -O data/raw/df_final.csv
 
       - name: Test data preparation
         run: |
           python -m src.data.prepare_data
-          ls data/processed/  # Vérifier que les fichiers sont créés
+          ls data/processed/  
 
   test-api:
     runs-on: ubuntu-latest
