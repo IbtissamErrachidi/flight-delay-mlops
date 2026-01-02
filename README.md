@@ -252,7 +252,7 @@ Prédiction du retard d'arrivée
 **Réponse**:
 ```json
 {
-  "predicted_arrival_delay": 8.5
+  "predicted_arrival_delay": 1.9828128814697266
 }
 ```
 
@@ -356,19 +356,6 @@ run_dvc_repro = BashOperator(
 - Montage du projet via volumes Docker
 - Exécution manuelle ou programmée du pipeline
 
-**Lancement Airflow**:
-```bash
-cd airflow
-
-# Initialisation d’Airflow (DB, user admin, permissions)
-docker compose up -d --build airflow-init
-
-# Démarrage des services Airflow
-docker compose up -d
-
-```
-
-Interface Airflow accessible sur `http://localhost:8080`
 
 ### 📦 Configuration Docker Multi-Conteneurs
 
@@ -428,6 +415,8 @@ docker run -p 8000:8000 flight-delay-api
 
 L'API sera accessible sur `http://localhost:8000`
 
+<img width="1919" height="212" alt="Capture d&#39;écran 2026-01-02 130736" src="https://github.com/user-attachments/assets/249eb8db-1941-4452-b45c-035ee66d7885" />
+
 ### Test de l'API
 
 Une fois l'API lancée, vous pouvez tester une prédiction avec :
@@ -453,15 +442,21 @@ curl -X POST http://127.0.0.1:8000/predict \
 ```
 
 Documentation interactive: `http://localhost:8000/docs`
+<img width="1808" height="521" alt="Capture d&#39;écran 2026-01-02 131046" src="https://github.com/user-attachments/assets/011b9532-f741-4c5e-9afe-4c84a19b40ba" />
+
 
 ### Lancement d'Airflow
 
 ```bash
 cd airflow
-docker-compose up -d
-```
 
-Interface Airflow: `http://localhost:8080`
+# Initialisation d’Airflow (DB, user admin, permissions)
+docker compose up -d --build airflow-init
+
+# Démarrage des services Airflow
+docker compose up -d
+
+```
 
 **Identifiants par défaut**:
 - Username: `airflow`
@@ -471,6 +466,10 @@ Pour exécuter le DAG DVC:
 1. Accéder à l'interface Airflow
 2. Activer le DAG `flight_delay_dvc_pipeline`
 3. Déclencher manuellement le DAG ou programmer son exécution selon un schedule approprié
+
+Interface Airflow accessible sur `http://localhost:8080`
+
+<img width="1917" height="953" alt="Capture d&#39;écran 2026-01-02 130617" src="https://github.com/user-attachments/assets/af258fac-a387-4b89-9e3c-efbcd2e1289d" />
 
 ---
 
