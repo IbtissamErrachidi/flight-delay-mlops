@@ -190,6 +190,7 @@ Tous les modèles sont trackés avec MLflow:
 ```bash
 mlflow ui
 ```
+<img width="1892" height="818" alt="Capture d&#39;écran 2026-01-02 124926" src="https://github.com/user-attachments/assets/4ae14ce2-94a7-4b7c-a555-0b2d975ef7dc" />
 
 ### 📄 Visualisation avec Evidently
 
@@ -203,11 +204,12 @@ start reports/evidently_regression_report.html
 ```
 
 ## Contenu du dossier `reports/` après génération
-
+```
 reports/
 ├── evidently_regression_report.html  # Rapport interactif
 └── evidently_regression_report.json  # Données brutes utilisées par Evidently
-
+```
+<img width="1876" height="943" alt="Capture d&#39;écran 2026-01-02 122020" src="https://github.com/user-attachments/assets/1a195f0f-6c64-4af2-b4cb-14575cb1a43d" />
 
 ### Ce rapport permet de visualiser :
 
@@ -315,6 +317,7 @@ Le workflow CI (`ci.yml`) s'exécute automatiquement à chaque push ou pull requ
 # Déclenché automatiquement sur push/PR
 # Ou manuellement via GitHub Actions UI
 ```
+<img width="1886" height="859" alt="Capture d&#39;écran 2026-01-01 022053" src="https://github.com/user-attachments/assets/bd882fb7-d750-48bb-af47-bb69949ad80b" />
 
 ### 🚀 Pipeline CD (Continuous Delivery)
 
