@@ -129,7 +129,7 @@ Cette phase initiale a permis de valider la faisabilité du projet dans un envir
 |-------|-------------|
 | **EDA** | Exploration des données, analyse des distributions, corrélations |
 | **Fusion & nettoyage** | Échantillonnage des 10 années, gestion des valeurs manquantes |
-| **Feature engineering** | Extraction de features temporelles (heure, jour, mois) et historiques (moyennes par compagnie/aéroport, ect) |
+| **Feature engineering** | Extraction de features temporelles (heure, jour, mois) et historiques (moyennes par compagnie/aéroport, etc) |
 | **Entraînement** | Test de plusieurs algorithmes (XGBoost, LightGBM, CatBoost, Random Forest) |
 | **Documentation** | Notebook propre et reproductible |
 
