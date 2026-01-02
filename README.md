@@ -200,13 +200,14 @@ Après avoir suivi le pipeline et tracké les modèles avec MLflow, un **rapport
 ```bash
 # Lance la visualisation du rapport dans le navigateur
 start reports/evidently_regression_report.html
+```
 
 ## Contenu du dossier `reports/` après génération
-```
+
 reports/
 ├── evidently_regression_report.html  # Rapport interactif
 └── evidently_regression_report.json  # Données brutes utilisées par Evidently
-```
+
 
 ### Ce rapport permet de visualiser :
 
