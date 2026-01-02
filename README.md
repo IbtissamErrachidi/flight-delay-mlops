@@ -23,6 +23,10 @@ Il comprend une phase exploratoire sur Kaggle, suivie d’une industrialisation 
 
 ## 🏗️ Architecture du projet
 
+
+<img width="1093" height="661" alt="image" src="https://github.com/user-attachments/assets/27690d9f-d11c-47c4-809c-8b07c1bffeeb" />
+
+
 ```
 flight-delay-prediction/
 ├── .dvc/                       # Configuration DVC
